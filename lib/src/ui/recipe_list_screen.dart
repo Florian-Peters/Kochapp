@@ -44,10 +44,14 @@ class RecipeListScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddRecipeScreen()),
-          );
+          // TODO: Implement navigation to AddRecipeScreen
+          // This is disabled to prevent build errors until AddRecipeScreen is created.
+          // To enable, create the screen and uncomment the following lines:
+          //
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => const AddRecipeScreen()),
+          // );
         },
         child: const Icon(Icons.add),
       ),

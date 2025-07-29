@@ -66,3 +66,14 @@ Die aktuelle Version verwendet statische Beispieldaten. Um eine dynamische Daten
      ```
 
 Nach diesen Schritten können Sie `cloud_firestore` verwenden, um Ihre Rezepte in der Cloud zu speichern und abzurufen.
+
+## Projektstruktur
+
+- `lib/main.dart`: Der Einstiegspunkt der Anwendung.
+- `lib/src/models/recipe.dart`: Das Datenmodell für ein Rezept.
+- `lib/src/services/firestore_service.dart`: Der Service, der die Kommunikation mit Firebase Firestore übernimmt.
+- `lib/src/ui/recipe_list_screen.dart`: Der Bildschirm, der die Liste der Rezepte anzeigt.
+
+## Fehlerbehebung
+
+- **Build-Fehler bezüglich NDK-Version:** Wenn Sie einen Fehler bezüglich der NDK-Version erhalten, fügen Sie `ndkVersion = "27.0.12077973"` zur Datei `android/app/build.gradle.kts` hinzu.

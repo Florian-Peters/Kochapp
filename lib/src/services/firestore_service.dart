@@ -7,36 +7,22 @@ class RecipeService {
   // Get a stream of all recipes
   Stream<List<Recipe>> getRecipes() {
     return _db.collection('recipes').snapshots().map((snapshot) => snapshot.docs
-        .map((doc) => Recipe.fromFirestore(doc.data() as Map<String, dynamic>, doc.id))
+        .map((doc) => Recipe.fromFirestore(doc.data(), doc.id))
         .toList());
   }
 
   // Add a new recipe
   Future<void> addRecipe(Recipe recipe) {
-    return _db.collection('recipes').add(recipe.toMap());
-  }
-}
-
-// Erweitern Sie das Recipe-Modell um die Firestore-Konvertierung
-extension on Recipe {
-  static Recipe fromFirestore(Map<String, dynamic> firestore, String id) {
-    return Recipe(
-      id: id,
-      name: firestore['name'] ?? '',
-      description: firestore['description'] ?? '',
-      ingredients: List<String>.from(firestore['ingredients'] ?? []),
-      steps: List<String>.from(firestore['steps'] ?? []),
-      cookingTime: firestore['cookingTime'] ?? 0,
-    );
+    return _db.collection('recipes').add(recipe.toFirestore());
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'description': description,
-      'ingredients': ingredients,
-      'steps': steps,
-      'cookingTime': cookingTime,
-    };
+  // Update an existing recipe
+  Future<void> updateRecipe(Recipe recipe) {
+    return _db.collection('recipes').doc(recipe.id).update(recipe.toFirestore());
+  }
+
+  // Delete a recipe
+  Future<void> deleteRecipe(String recipeId) {
+    return _db.collection('recipes').doc(recipeId).delete();
   }
 }
