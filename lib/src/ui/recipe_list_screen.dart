@@ -1,26 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/recipe.dart';
+import '../services/firestore_service.dart';
 
 class RecipeListScreen extends StatelessWidget {
-  final List<Recipe> recipes = [
-    // Beispiel-Daten
-    Recipe(
-      id: '1',
-      name: 'Spaghetti Carbonara',
-      description: 'Ein klassisches italienisches Nudelgericht.',
-      ingredients: ['Spaghetti', 'Eier', 'Pecorino', 'Guanciale', 'Pfeffer'],
-      steps: ['Kochen Sie die Nudeln.', 'Braten Sie den Speck an.', 'Mischen Sie alles zusammen.'],
-      cookingTime: 20,
-    ),
-    Recipe(
-      id: '2',
-      name: 'Pfannkuchen',
-      description: 'Einfache und leckere Pfannkuchen.',
-      ingredients: ['Mehl', 'Eier', 'Milch', 'Zucker', 'Butter'],
-      steps: ['Mischen Sie die trockenen Zutaten.', 'Fügen Sie die feuchten Zutaten hinzu.', 'Backen Sie sie in einer Pfanne.'],
-      cookingTime: 15,
-    ),
-  ];
+  final RecipeService _recipeService = RecipeService();
 
   RecipeListScreen({super.key});
 
@@ -30,22 +13,41 @@ class RecipeListScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Meine Rezepte'),
       ),
-      body: ListView.builder(
-        itemCount: recipes.length,
-        itemBuilder: (context, index) {
-          final recipe = recipes[index];
-          return ListTile(
-            title: Text(recipe.name),
-            subtitle: Text(recipe.description),
-            onTap: () {
-              // Navigieren Sie zum Detailbildschirm
+      body: StreamBuilder<List<Recipe>>(
+        stream: _recipeService.getRecipes(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Fehler: ${snapshot.error}'));
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('Keine Rezepte gefunden. Fügen Sie eines hinzu!'));
+          }
+
+          final recipes = snapshot.data!;
+          return ListView.builder(
+            itemCount: recipes.length,
+            itemBuilder: (context, index) {
+              final recipe = recipes[index];
+              return ListTile(
+                title: Text(recipe.name),
+                subtitle: Text(recipe.description),
+                onTap: () {
+                  // Navigieren Sie zum Detailbildschirm
+                },
+              );
             },
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigieren Sie zum Bildschirm zum Hinzufügen von Rezepten
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddRecipeScreen()),
+          );
         },
         child: const Icon(Icons.add),
       ),

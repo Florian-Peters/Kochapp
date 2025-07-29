@@ -1,5 +1,5 @@
 class Recipe {
-  final String id;
+  String? id;
   final String name;
   final String description;
   final List<String> ingredients;
@@ -7,7 +7,7 @@ class Recipe {
   final int cookingTime; // in minutes
 
   Recipe({
-    required this.id,
+    this.id,
     required this.name,
     required this.description,
     required this.ingredients,
