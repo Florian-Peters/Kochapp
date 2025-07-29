@@ -32,6 +32,9 @@ class RecipeListScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final recipe = recipes[index];
               return ListTile(
+                leading: recipe.imageUrl != null
+                    ? Image.network(recipe.imageUrl!)
+                    : const Icon(Icons.image),
                 title: Text(recipe.name),
                 subtitle: Text(recipe.description),
                 onTap: () {
@@ -44,14 +47,10 @@ class RecipeListScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Implement navigation to AddRecipeScreen
-          // This is disabled to prevent build errors until AddRecipeScreen is created.
-          // To enable, create the screen and uncomment the following lines:
-          //
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => const AddRecipeScreen()),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddRecipeScreen()),
+          );
         },
         child: const Icon(Icons.add),
       ),

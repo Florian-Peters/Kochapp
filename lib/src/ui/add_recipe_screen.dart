@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../models/recipe.dart';
 import '../services/firestore_service.dart';
 
@@ -16,6 +20,17 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   final _ingredientsController = TextEditingController();
   final _stepsController = TextEditingController();
   final _cookingTimeController = TextEditingController();
+  File? _image;
+  final _picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +44,13 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
           key: _formKey,
           child: ListView(
             children: [
+              _image != null
+                  ? Image.file(_image!)
+                  : const Text('Kein Bild ausgewählt.'),
+              ElevatedButton(
+                onPressed: _pickImage,
+                child: const Text('Bild auswählen'),
+              ),
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(labelText: 'Rezeptname'),
@@ -69,14 +91,25 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     );
   }
 
-  void _saveRecipe() {
+  Future<void> _saveRecipe() async {
     if (_formKey.currentState!.validate()) {
+      String? imageUrl;
+      if (_image != null) {
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('recipe_images')
+            .child('${DateTime.now().toIso8601String()}.jpg');
+        await storageRef.putFile(_image!);
+        imageUrl = await storageRef.getDownloadURL();
+      }
+
       final recipe = Recipe(
         name: _nameController.text,
         description: _descriptionController.text,
         ingredients: _ingredientsController.text.split(',').map((e) => e.trim()).toList(),
         steps: _stepsController.text.split(',').map((e) => e.trim()).toList(),
         cookingTime: int.tryParse(_cookingTimeController.text) ?? 0,
+        imageUrl: imageUrl,
       );
 
       final recipeService = RecipeService();
@@ -88,12 +121,6 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         );
       });
     }
-  }
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   @override
