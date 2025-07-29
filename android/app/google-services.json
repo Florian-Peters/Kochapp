@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "522180221891",
+    "project_id": "kochbox-8e889",
+    "storage_bucket": "kochbox-8e889.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522180221891:android:5f5b2dd19591773ef9bb76",
+        "android_client_info": {
+          "package_name": "com.example.koch_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpkEkvXxnYC-G7mb8fYIZ_m-bpIa1a0dY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
