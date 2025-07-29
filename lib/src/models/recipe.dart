@@ -5,6 +5,7 @@ class Recipe {
   final List<String> ingredients;
   final List<String> steps;
   final int cookingTime; // in minutes
+  String? imageUrl;
 
   Recipe({
     this.id,
@@ -13,6 +14,7 @@ class Recipe {
     required this.ingredients,
     required this.steps,
     required this.cookingTime,
+    this.imageUrl,
   });
 
   factory Recipe.fromFirestore(Map<String, dynamic> data, String id) {
@@ -23,6 +25,7 @@ class Recipe {
       ingredients: List<String>.from(data['ingredients'] ?? []),
       steps: List<String>.from(data['steps'] ?? []),
       cookingTime: data['cookingTime'] ?? 0,
+      imageUrl: data['imageUrl'],
     );
   }
 
@@ -33,6 +36,7 @@ class Recipe {
       'ingredients': ingredients,
       'steps': steps,
       'cookingTime': cookingTime,
+      'imageUrl': imageUrl,
     };
   }
 }
